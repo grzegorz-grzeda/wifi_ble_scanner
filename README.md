@@ -18,14 +18,14 @@ It does not yet implement BLE scanning.
 ## Files
 
 - `CMakeLists.txt`: Zephyr application entry point
-- `include/wifi_ble_scanner/app_settings.h`: application settings interface
-- `include/wifi_ble_scanner/app_shell.h`: application shell interface
-- `include/wifi_ble_scanner/app_wifi.h`: application Wi-Fi interface
+- `include/wifi_ble_scanner/settings.h`: application settings interface
+- `include/wifi_ble_scanner/shell.h`: application shell interface
+- `include/wifi_ble_scanner/wifi.h`: application Wi-Fi interface
 - `prj.conf`: application configuration
 - `src/main.c`: startup orchestration
-- `src/app_settings.c`: application-owned settings implementation
-- `src/app_shell.c`: application shell commands
-- `src/app_wifi.c`: Wi-Fi event handling and stored credential helpers
+- `src/settings.c`: application-owned settings implementation
+- `src/shell.c`: application shell commands
+- `src/wifi.c`: Wi-Fi event handling and stored credential helpers
 - `LICENSE`: local MIT license for this app subtree
 
 ## Verified Board Target

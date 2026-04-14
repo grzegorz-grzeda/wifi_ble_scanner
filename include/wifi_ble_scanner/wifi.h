@@ -1,12 +1,12 @@
 /* SPDX-License-Identifier: MIT */
 
 /**
- * @file app_wifi.h
+ * @file wifi.h
  * @brief Wi-Fi lifecycle helpers for the application.
  */
 
-#ifndef WIFI_BLE_SCANNER_APP_WIFI_H_
-#define WIFI_BLE_SCANNER_APP_WIFI_H_
+#ifndef WIFI_BLE_SCANNER_WIFI_H_
+#define WIFI_BLE_SCANNER_WIFI_H_
 
 struct net_if;
 
@@ -40,4 +40,4 @@ int wifi_ble_scanner_wifi_request_autoconnect(struct net_if* wifi_iface);
 }
 #endif
 
-#endif /* WIFI_BLE_SCANNER_APP_WIFI_H_ */
+#endif /* WIFI_BLE_SCANNER_WIFI_H_ */

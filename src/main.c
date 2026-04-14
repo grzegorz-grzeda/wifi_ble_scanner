@@ -1,14 +1,14 @@
 /* SPDX-License-Identifier: MIT */
 
-#include <wifi_ble_scanner/app_settings.h>
-#include <wifi_ble_scanner/app_shell.h>
-#include <wifi_ble_scanner/app_wifi.h>
+#include <wifi_ble_scanner/settings.h>
+#include <wifi_ble_scanner/shell.h>
+#include <wifi_ble_scanner/wifi.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/net/net_if.h>
 
 LOG_MODULE_REGISTER(wifi_ble_scanner, LOG_LEVEL_INF);
 
-static void maybe_autoconnect(struct net_if* wifi_iface) {
+static void main_maybe_autoconnect(struct net_if* wifi_iface) {
   int ret;
 
   if (!wifi_ble_scanner_settings_autoconnect_on_boot()) {
@@ -47,7 +47,7 @@ int main(void) {
 
   LOG_INF("UART shell is ready. Use 'app', 'wifi', 'wifi cred', and 'settings' commands.");
   wifi_ble_scanner_wifi_log_stored_credentials();
-  maybe_autoconnect(wifi_iface);
+  main_maybe_autoconnect(wifi_iface);
   LOG_INF("BLE scanning is not implemented yet.");
 
   return 0;

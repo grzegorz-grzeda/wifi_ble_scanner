@@ -7,4 +7,4 @@ project(wifi_ble_scanner)
 
 target_include_directories(app PRIVATE include)
 
-target_sources(app PRIVATE src/main.c src/app_settings.c src/app_shell.c src/app_wifi.c)
+target_sources(app PRIVATE src/main.c src/settings.c src/shell.c src/wifi.c)

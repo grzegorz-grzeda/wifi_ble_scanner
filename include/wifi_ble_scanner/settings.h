@@ -1,12 +1,12 @@
 /* SPDX-License-Identifier: MIT */
 
 /**
- * @file app_settings.h
+ * @file settings.h
  * @brief Application-owned settings interface.
  */
 
-#ifndef WIFI_BLE_SCANNER_APP_SETTINGS_H_
-#define WIFI_BLE_SCANNER_APP_SETTINGS_H_
+#ifndef WIFI_BLE_SCANNER_SETTINGS_H_
+#define WIFI_BLE_SCANNER_SETTINGS_H_
 
 #include <stdbool.h>
 
@@ -42,4 +42,4 @@ bool wifi_ble_scanner_settings_autoconnect_on_boot(void);
 }
 #endif
 
-#endif /* WIFI_BLE_SCANNER_APP_SETTINGS_H_ */
+#endif /* WIFI_BLE_SCANNER_SETTINGS_H_ */
