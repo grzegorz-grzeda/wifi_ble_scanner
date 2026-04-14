@@ -36,6 +36,19 @@ void wifi_ble_scanner_wifi_log_stored_credentials(void);
  */
 int wifi_ble_scanner_wifi_request_autoconnect(struct net_if* wifi_iface);
 
+/**
+ * @brief Start boot-time Wi-Fi auto-connect with retry handling.
+ *
+ * @details This starts a managed boot auto-connect flow that retries stored
+ * credential connection attempts until the first successful connection.
+ *
+ * @param[in] wifi_iface Wi-Fi interface used by the application.
+ *
+ * @return 0 if the retry-managed auto-connect flow was started, otherwise a
+ * negative error code.
+ */
+int wifi_ble_scanner_wifi_start_autoconnect(struct net_if* wifi_iface);
+
 #ifdef __cplusplus
 }
 #endif

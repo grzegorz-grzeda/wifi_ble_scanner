@@ -98,7 +98,8 @@ cd build/wifi_ble_scanner_esp32c6
 ## Current Runtime Behavior
 
 The application registers Wi-Fi management callbacks, enables UART shell access,
-reports whether stored Wi-Fi credentials exist, and logs Wi-Fi connect and disconnect results.
+reports whether stored Wi-Fi credentials exist, retries boot auto-connect until the first successful
+connection, and logs Wi-Fi connect and disconnect results.
 
 Current implementation notes:
 
@@ -127,6 +128,8 @@ Useful shell commands:
 For open networks, omit the passphrase and use `-k 0`.
 
 If `wifi_ble_scanner/autoconnect_on_boot` is set to `true`, the app requests `wifi cred auto_connect` during boot.
+If the initial boot-time connection attempt fails or disconnects before the first successful connection, the app
+retries automatically with capped exponential backoff.
 
 ## Must Follow When Editing Code
 

@@ -18,13 +18,13 @@ static void main_maybe_autoconnect(struct net_if* wifi_iface) {
     return;
   }
 
-  ret = wifi_ble_scanner_wifi_request_autoconnect(wifi_iface);
+  ret = wifi_ble_scanner_wifi_start_autoconnect(wifi_iface);
   if (ret != 0) {
-    LOG_WRN("Stored Wi-Fi auto-connect request failed: %d", ret);
+    LOG_WRN("Stored Wi-Fi auto-connect startup failed: %d", ret);
     return;
   }
 
-  LOG_INF("Stored Wi-Fi auto-connect requested.");
+  LOG_INF("Stored Wi-Fi auto-connect started.");
 }
 
 int main(void) {
