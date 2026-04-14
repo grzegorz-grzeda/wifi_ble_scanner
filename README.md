@@ -7,9 +7,11 @@ Minimal Zephyr application stub for the ESP32-C6 DevKit-C.
 This application currently provides:
 
 - a bootable Zephyr app target under `apps/wifi_ble_scanner`
+- sysbuild support that builds MCUboot together with the application
 - Wi-Fi support with Zephyr Wi-Fi shell commands over UART
 - Wi-Fi credential storage through the `wifi_credentials` library
 - app-local settings storage for boot auto-connect behavior
+- MCUmgr SMP over UDP for remote management and image upload
 - log-based startup and Wi-Fi event messages using the Zephyr logging subsystem
 - a verified build for `esp32c6_devkitc/esp32c6/hpcore`
 
@@ -19,6 +21,8 @@ It does not yet implement BLE scanning.
 
 - `CMakeLists.txt`: Zephyr application entry point
 - `prj.conf`: application configuration
+- `sysbuild.conf`: sysbuild configuration that enables MCUboot
+- `sysbuild/mcuboot.conf`: MCUboot-specific sysbuild fragment
 - `src/CMakeLists.txt`: module-oriented build structure
 - `src/main/main.c`: startup orchestration
 - `src/settings/settings.h`: application settings interface
@@ -42,34 +46,40 @@ esp32c6_devkitc/esp32c6/hpcore
 
 ## Build
 
+For MCUboot-enabled firmware update support, build with sysbuild.
+
 From the workspace root:
 
 ```sh
-.venv/bin/west build -p always \
+.venv/bin/west build --sysbuild -p always \
   -b esp32c6_devkitc/esp32c6/hpcore \
   -s apps/wifi_ble_scanner \
-  -d build/wifi_ble_scanner_esp32c6
+  -d build/wifi_ble_scanner_esp32c6_sysbuild
 ```
+
+This builds both the application and MCUboot.
+
+If you want an application-only build without MCUboot, omit `--sysbuild` and use a separate build directory.
 
 ## Flash
 
 Flash the generated image:
 
 ```sh
-.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6
+.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6_sysbuild
 ```
 
 Flash to a specific UART port:
 
 ```sh
-.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6 --esp-device /dev/ttyUSB0
+.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6_sysbuild --esp-device /dev/ttyUSB0
 ```
 
 Alternative using an environment variable:
 
 ```sh
 export ESPTOOL_PORT=/dev/ttyUSB0
-.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6
+.venv/bin/west flash -d build/wifi_ble_scanner_esp32c6_sysbuild
 ```
 
 ## Monitor
@@ -77,21 +87,21 @@ export ESPTOOL_PORT=/dev/ttyUSB0
 `west espressif monitor` must be run from inside the build directory. It does not accept a custom build directory argument.
 
 ```sh
-cd build/wifi_ble_scanner_esp32c6
+cd build/wifi_ble_scanner_esp32c6_sysbuild
 ../../.venv/bin/west espressif monitor
 ```
 
 Use an explicit serial port if needed:
 
 ```sh
-cd build/wifi_ble_scanner_esp32c6
+cd build/wifi_ble_scanner_esp32c6_sysbuild
 ../../.venv/bin/west espressif -p /dev/ttyUSB0 monitor
 ```
 
 Use an explicit baud rate if needed:
 
 ```sh
-cd build/wifi_ble_scanner_esp32c6
+cd build/wifi_ble_scanner_esp32c6_sysbuild
 ../../.venv/bin/west espressif -p /dev/ttyUSB0 -b 115200 monitor
 ```
 
@@ -99,7 +109,7 @@ cd build/wifi_ble_scanner_esp32c6
 
 The application registers Wi-Fi management callbacks, enables UART shell access,
 reports whether stored Wi-Fi credentials exist, retries boot auto-connect until the first successful
-connection, and logs Wi-Fi connect and disconnect results.
+connection, exposes MCUmgr over UDP, and logs Wi-Fi connect and disconnect results.
 
 Current implementation notes:
 
@@ -108,6 +118,48 @@ Current implementation notes:
 - log level: `INFO`
 - UART shell commands are available through `wifi`, `wifi cred`, and `settings`
 - app setting key: `wifi_ble_scanner/autoconnect_on_boot`
+- MCUmgr over UDP supports image, OS, shell, settings, and stat management groups
+- MCUmgr settings access is restricted to the `wifi_ble_scanner/*` subtree
+- MCUboot is intended to be built through sysbuild
+
+## MCUmgr Over UDP
+
+The app enables MCUmgr SMP over UDP on IPv4.
+
+Enabled MCUmgr groups:
+
+- image management
+- OS management
+- shell management
+- settings management
+- statistics management
+
+Remote settings access is limited to the application-owned `wifi_ble_scanner/*` subtree.
+
+The device must have Wi-Fi connectivity and an IPv4 address before MCUmgr UDP requests can reach it.
+
+The default UDP SMP port is the Zephyr MCUmgr transport default.
+
+Typical workflow:
+
+1. Build with `--sysbuild` so MCUboot and signed images are generated.
+2. Flash the sysbuild output.
+3. Connect the device to Wi-Fi and ensure it has an IPv4 address.
+4. Use an MCUmgr-compatible client against the device IP over UDP for `image`, `os`, `shell`, and `settings` commands.
+
+For image update, upload the signed application image produced by the sysbuild build.
+
+With the verified build in this workspace, the signed application image is:
+
+```sh
+build/wifi_ble_scanner_esp32c6_sysbuild/wifi_ble_scanner/zephyr/zephyr.signed.bin
+```
+
+MCUboot itself is built in:
+
+```sh
+build/wifi_ble_scanner_esp32c6_sysbuild/mcuboot/zephyr/
+```
 
 ## UART Shell Usage
 
