@@ -7,16 +7,25 @@ Minimal Zephyr application stub for the ESP32-C6 DevKit-C.
 This application currently provides:
 
 - a bootable Zephyr app target under `apps/wifi_ble_scanner`
-- log-based startup messages using the Zephyr logging subsystem
+- Wi-Fi support with Zephyr Wi-Fi shell commands over UART
+- Wi-Fi credential storage through the `wifi_credentials` library
+- app-local settings storage for boot auto-connect behavior
+- log-based startup and Wi-Fi event messages using the Zephyr logging subsystem
 - a verified build for `esp32c6_devkitc/esp32c6/hpcore`
 
-It does not yet implement Wi-Fi or BLE scanning.
+It does not yet implement BLE scanning.
 
 ## Files
 
 - `CMakeLists.txt`: Zephyr application entry point
+- `include/wifi_ble_scanner/app_settings.h`: application settings interface
+- `include/wifi_ble_scanner/app_shell.h`: application shell interface
+- `include/wifi_ble_scanner/app_wifi.h`: application Wi-Fi interface
 - `prj.conf`: application configuration
-- `src/main.c`: current stub implementation
+- `src/main.c`: startup orchestration
+- `src/app_settings.c`: application-owned settings implementation
+- `src/app_shell.c`: application shell commands
+- `src/app_wifi.c`: Wi-Fi event handling and stored credential helpers
 - `LICENSE`: local MIT license for this app subtree
 
 ## Verified Board Target
@@ -84,13 +93,36 @@ cd build/wifi_ble_scanner_esp32c6
 
 ## Current Runtime Behavior
 
-The application logs two startup messages and then idles forever.
+The application registers Wi-Fi management callbacks, enables UART shell access,
+reports whether stored Wi-Fi credentials exist, and logs Wi-Fi connect and disconnect results.
 
 Current implementation notes:
 
 - logging only, no `printk`
 - module name: `wifi_ble_scanner`
 - log level: `INFO`
+- UART shell commands are available through `wifi`, `wifi cred`, and `settings`
+- app setting key: `wifi_ble_scanner/autoconnect_on_boot`
+
+## UART Shell Usage
+
+Build and flash the app, then open the monitor from the build directory.
+
+Useful shell commands:
+
+- `app reboot`
+- `wifi scan`
+- `wifi status`
+- `wifi cred list`
+- `wifi cred auto_connect`
+- `wifi cred add -s "SSID" -k 1 -p "passphrase"`
+- `settings read string wifi_ble_scanner/autoconnect_on_boot`
+- `settings write string wifi_ble_scanner/autoconnect_on_boot true`
+- `settings write string wifi_ble_scanner/autoconnect_on_boot false`
+
+For open networks, omit the passphrase and use `-k 0`.
+
+If `wifi_ble_scanner/autoconnect_on_boot` is set to `true`, the app requests `wifi cred auto_connect` during boot.
 
 ## Must Follow When Editing Code
 
