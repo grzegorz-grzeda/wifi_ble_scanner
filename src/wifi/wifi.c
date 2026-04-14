@@ -2,8 +2,10 @@
 
 #include "wifi.h"
 
+#include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/net/hostname.h>
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/net_mgmt.h>
 #include <zephyr/net/wifi_credentials.h>
@@ -22,8 +24,41 @@ static bool wifi_autoconnect_active;
 static bool wifi_connect_in_progress;
 static uint32_t wifi_retry_attempt;
 
+static int wifi_configure_device_name(struct net_if* wifi_iface);
 static int wifi_request_stored_connect(struct net_if* wifi_iface);
 static void wifi_schedule_autoconnect_retry(const char* reason, int status);
+
+const char* wifi_ble_scanner_wifi_get_device_name(void) { return net_hostname_get(); }
+
+static int wifi_configure_device_name(struct net_if* wifi_iface) {
+  const struct net_linkaddr* link_addr;
+  char device_name[NET_HOSTNAME_SIZE];
+  int written;
+  int ret;
+
+  if (wifi_iface == NULL) {
+    return -EINVAL;
+  }
+
+  link_addr = net_if_get_link_addr(wifi_iface);
+  if (link_addr == NULL || link_addr->len < WIFI_MAC_ADDR_LEN) {
+    return -ENODEV;
+  }
+
+  written = snprintk(device_name, sizeof(device_name), "%s-%02x%02x%02x", CONFIG_NET_HOSTNAME, link_addr->addr[3],
+                     link_addr->addr[4], link_addr->addr[5]);
+  if (written < 0 || written >= sizeof(device_name)) {
+    return -ENAMETOOLONG;
+  }
+
+  ret = net_hostname_set(device_name, strlen(device_name));
+  if (ret != 0) {
+    return ret;
+  }
+
+  LOG_INF("mDNS device name: %s.local", net_hostname_get());
+  return 0;
+}
 
 static uint32_t wifi_retry_delay_seconds(uint32_t retry_attempt) {
   uint32_t delay_seconds = WIFI_AUTOCONNECT_INITIAL_RETRY_SECONDS;
@@ -166,10 +201,17 @@ static void wifi_event_handler(struct net_mgmt_event_callback* cb, uint64_t mgmt
 }
 
 void wifi_ble_scanner_wifi_init(struct net_if* wifi_iface) {
+  int ret;
+
   wifi_autoconnect_iface = wifi_iface;
   wifi_autoconnect_active = false;
   wifi_connect_in_progress = false;
   wifi_retry_attempt = 0U;
+
+  ret = wifi_configure_device_name(wifi_iface);
+  if (ret != 0) {
+    LOG_WRN("Failed to configure mDNS device name from Wi-Fi MAC: %d", ret);
+  }
 
   net_mgmt_init_event_callback(&wifi_event_cb, wifi_event_handler, WIFI_EVENT_MASK);
   net_mgmt_add_event_callback(&wifi_event_cb);

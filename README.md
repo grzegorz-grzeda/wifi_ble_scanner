@@ -12,6 +12,7 @@ This application currently provides:
 - Wi-Fi credential storage through the `wifi_credentials` library
 - app-local settings storage for boot auto-connect behavior
 - MCUmgr SMP over UDP for remote management and image upload
+- mDNS hostname advertisement derived from the Wi-Fi MAC address
 - log-based startup and Wi-Fi event messages using the Zephyr logging subsystem
 - a verified build for `esp32c6_devkitc/esp32c6/hpcore`
 
@@ -117,6 +118,7 @@ Current implementation notes:
 - module name: `wifi_ble_scanner`
 - log level: `INFO`
 - UART shell commands are available through `wifi`, `wifi cred`, and `settings`
+- the device hostname is published through mDNS as `wifi-ble-scanner-<last-3-mac-octets>.local`
 - app setting key: `wifi_ble_scanner/autoconnect_on_boot`
 - MCUmgr over UDP supports image, OS, shell, settings, and stat management groups
 - MCUmgr settings access is restricted to the `wifi_ble_scanner/*` subtree
@@ -161,12 +163,29 @@ MCUboot itself is built in:
 build/wifi_ble_scanner_esp32c6_sysbuild/mcuboot/zephyr/
 ```
 
+## mDNS Hostname
+
+The app enables the Zephyr mDNS responder and sets the device hostname at runtime from the last three octets of the Wi-Fi MAC address.
+
+The hostname format is:
+
+```sh
+wifi-ble-scanner-<6 hex digits from the last 3 Wi-Fi MAC octets>
+```
+
+On the local network, the device is advertised as:
+
+```sh
+wifi-ble-scanner-<6 hex digits from the last 3 Wi-Fi MAC octets>.local
+```
+
 ## UART Shell Usage
 
 Build and flash the app, then open the monitor from the build directory.
 
 Useful shell commands:
 
+- `app name`
 - `app reboot`
 - `wifi scan`
 - `wifi status`

@@ -27,6 +27,13 @@ void wifi_ble_scanner_wifi_init(struct net_if* wifi_iface);
 void wifi_ble_scanner_wifi_log_stored_credentials(void);
 
 /**
+ * @brief Get the current device name used for networking and mDNS.
+ *
+ * @return Pointer to the current hostname string.
+ */
+const char* wifi_ble_scanner_wifi_get_device_name(void);
+
+/**
  * @brief Request connection to stored Wi-Fi credentials.
  *
  * @param[in] wifi_iface Wi-Fi interface used by the application.

@@ -5,6 +5,16 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/sys/reboot.h>
 
+#include "wifi/wifi.h"
+
+static int shell_cmd_name(const struct shell* shell, size_t argc, char* argv[]) {
+  ARG_UNUSED(argc);
+  ARG_UNUSED(argv);
+
+  shell_print(shell, "mDNS device name: %s.local", wifi_ble_scanner_wifi_get_device_name());
+  return 0;
+}
+
 static int shell_cmd_reboot(const struct shell* shell, size_t argc, char* argv[]) {
   ARG_UNUSED(argc);
   ARG_UNUSED(argv);
@@ -13,7 +23,9 @@ static int shell_cmd_reboot(const struct shell* shell, size_t argc, char* argv[]
   sys_reboot(SYS_REBOOT_COLD);
 }
 
-SHELL_STATIC_SUBCMD_SET_CREATE(shell_cmds, SHELL_CMD_ARG(reboot, NULL, "Reboot the device.", shell_cmd_reboot, 1, 0),
+SHELL_STATIC_SUBCMD_SET_CREATE(shell_cmds,
+                               SHELL_CMD_ARG(name, NULL, "Print the current mDNS device name.", shell_cmd_name, 1, 0),
+                               SHELL_CMD_ARG(reboot, NULL, "Reboot the device.", shell_cmd_reboot, 1, 0),
                                SHELL_SUBCMD_SET_END);
 
 SHELL_CMD_REGISTER(app, &shell_cmds, "Application commands", NULL);
