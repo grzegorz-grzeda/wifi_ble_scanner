@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: MIT */
 
+#include "settings.h"
+
 #include <stdbool.h>
 #include <string.h>
-#include <wifi_ble_scanner/settings.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/settings/settings.h>
 

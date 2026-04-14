@@ -18,14 +18,18 @@ It does not yet implement BLE scanning.
 ## Files
 
 - `CMakeLists.txt`: Zephyr application entry point
-- `include/wifi_ble_scanner/settings.h`: application settings interface
-- `include/wifi_ble_scanner/shell.h`: application shell interface
-- `include/wifi_ble_scanner/wifi.h`: application Wi-Fi interface
 - `prj.conf`: application configuration
-- `src/main.c`: startup orchestration
-- `src/settings.c`: application-owned settings implementation
-- `src/shell.c`: application shell commands
-- `src/wifi.c`: Wi-Fi event handling and stored credential helpers
+- `src/CMakeLists.txt`: module-oriented build structure
+- `src/main/main.c`: startup orchestration
+- `src/settings/settings.h`: application settings interface
+- `src/settings/settings.c`: application-owned settings implementation
+- `src/settings/CMakeLists.txt`: settings module build registration
+- `src/shell/shell.h`: application shell interface
+- `src/shell/shell.c`: application shell commands
+- `src/shell/CMakeLists.txt`: shell module build registration
+- `src/wifi/wifi.h`: application Wi-Fi interface
+- `src/wifi/wifi.c`: Wi-Fi event handling and stored credential helpers
+- `src/wifi/CMakeLists.txt`: Wi-Fi module build registration
 - `LICENSE`: local MIT license for this app subtree
 
 ## Verified Board Target
@@ -136,6 +140,7 @@ These rules are mandatory for changes in this app subtree.
 - Preserve the local MIT licensing model. New source or config files in this subtree must use MIT SPDX headers where appropriate.
 - Prefer small, isolated changes. Do not mix Wi-Fi work, BLE work, and unrelated cleanup in one edit.
 - Keep modules small and focused. Split code into headers and source files once responsibilities stop being trivial.
+- Keep module headers next to their implementation files. Do not reintroduce a separate top-level include tree for app-local modules.
 - Prefer clear, explicit names for functions, types, variables, and macros. Avoid abbreviations unless they match Zephyr or protocol terminology.
 - Keep public interfaces minimal. Make internal helpers `static` and expose only what other translation units need.
 - Check and handle return values from Zephyr APIs and driver calls. Log failures with enough context to debug them.

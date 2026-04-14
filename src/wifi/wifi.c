@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: MIT */
 
-#include <wifi_ble_scanner/wifi.h>
+#include "wifi.h"
+
 #include <zephyr/logging/log.h>
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/net_mgmt.h>

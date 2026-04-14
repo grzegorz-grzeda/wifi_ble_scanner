@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: MIT */
 
-#include <wifi_ble_scanner/settings.h>
-#include <wifi_ble_scanner/shell.h>
-#include <wifi_ble_scanner/wifi.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/net/net_if.h>
+
+#include "settings/settings.h"
+#include "shell/shell.h"
+#include "wifi/wifi.h"
 
 LOG_MODULE_REGISTER(wifi_ble_scanner, LOG_LEVEL_INF);
 

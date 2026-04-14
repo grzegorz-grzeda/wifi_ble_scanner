@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: MIT */
 
-#include <wifi_ble_scanner/shell.h>
+#include "shell.h"
+
 #include <zephyr/shell/shell.h>
 #include <zephyr/sys/reboot.h>
 
