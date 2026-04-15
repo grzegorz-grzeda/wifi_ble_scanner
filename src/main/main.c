@@ -6,6 +6,7 @@
 #include "led/led.h"
 #include "settings/settings.h"
 #include "shell/shell.h"
+#include "version/version.h"
 #include "wifi/wifi.h"
 
 LOG_MODULE_REGISTER(wifi_ble_scanner, LOG_LEVEL_INF);
@@ -32,7 +33,7 @@ int main(void) {
   struct net_if* wifi_iface = net_if_get_first_wifi();
   int ret;
 
-  LOG_INF("wifi_ble_scanner starting on %s", CONFIG_BOARD_TARGET);
+  wifi_ble_scanner_version_log_banner();
 
   ret = wifi_ble_scanner_led_init();
   if (ret != 0) {
