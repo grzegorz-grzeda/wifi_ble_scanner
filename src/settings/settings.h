@@ -1,8 +1,15 @@
 /* SPDX-License-Identifier: MIT */
 
 /**
+ * @defgroup wifi_ble_scanner_settings Settings Module
+ * @ingroup wifi_ble_scanner_app
+ * @brief Persistent application settings.
+ */
+
+/**
  * @file settings.h
  * @brief Application-owned settings interface.
+ * @ingroup wifi_ble_scanner_settings
  */
 
 #ifndef WIFI_BLE_SCANNER_SETTINGS_H_
@@ -13,6 +20,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** @addtogroup wifi_ble_scanner_settings
+ * @{
+ */
 
 /**
  * @brief Settings subtree name for the application.
@@ -37,6 +48,8 @@ int wifi_ble_scanner_settings_load(void);
  * @return true if enabled, otherwise false.
  */
 bool wifi_ble_scanner_settings_autoconnect_on_boot(void);
+
+/** @} */
 
 #ifdef __cplusplus
 }

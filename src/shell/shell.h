@@ -1,8 +1,15 @@
 /* SPDX-License-Identifier: MIT */
 
 /**
+ * @defgroup wifi_ble_scanner_shell Shell Module
+ * @ingroup wifi_ble_scanner_app
+ * @brief Application shell command registration.
+ */
+
+/**
  * @file shell.h
  * @brief Application shell command registration.
+ * @ingroup wifi_ble_scanner_shell
  */
 
 #ifndef WIFI_BLE_SCANNER_SHELL_H_
@@ -12,6 +19,10 @@
 extern "C" {
 #endif
 
+/** @addtogroup wifi_ble_scanner_shell
+ * @{
+ */
+
 /**
  * @brief Register application shell commands.
  *
@@ -20,6 +31,8 @@ extern "C" {
  * responsibility.
  */
 void wifi_ble_scanner_shell_init(void);
+
+/** @} */
 
 #ifdef __cplusplus
 }

@@ -3,6 +3,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/net/net_if.h>
 
+#include "led/led.h"
 #include "settings/settings.h"
 #include "shell/shell.h"
 #include "wifi/wifi.h"
@@ -33,6 +34,11 @@ int main(void) {
 
   LOG_INF("wifi_ble_scanner starting on %s", CONFIG_BOARD_TARGET);
 
+  ret = wifi_ble_scanner_led_init();
+  if (ret != 0) {
+    LOG_WRN("Onboard RGB LED init failed: %d", ret);
+  }
+
   if (wifi_iface == NULL) {
     LOG_ERR("No Wi-Fi interface found.");
     return 0;
@@ -46,10 +52,8 @@ int main(void) {
     LOG_WRN("settings_load failed: %d", ret);
   }
 
-  LOG_INF("UART shell is ready. Use 'app', 'wifi', 'wifi cred', and 'settings' commands.");
   wifi_ble_scanner_wifi_log_stored_credentials();
   main_maybe_autoconnect(wifi_iface);
-  LOG_INF("BLE scanning is not implemented yet.");
 
   return 0;
 }

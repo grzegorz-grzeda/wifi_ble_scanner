@@ -1,8 +1,20 @@
 /* SPDX-License-Identifier: MIT */
 
 /**
+ * @defgroup wifi_ble_scanner_app Wi-Fi BLE Scanner
+ * @brief Public interfaces for the Wi-Fi BLE scanner application.
+ */
+
+/**
+ * @defgroup wifi_ble_scanner_wifi Wi-Fi Module
+ * @ingroup wifi_ble_scanner_app
+ * @brief Wi-Fi lifecycle and connectivity helpers.
+ */
+
+/**
  * @file wifi.h
  * @brief Wi-Fi lifecycle helpers for the application.
+ * @ingroup wifi_ble_scanner_wifi
  */
 
 #ifndef WIFI_BLE_SCANNER_WIFI_H_
@@ -13,6 +25,10 @@ struct net_if;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** @addtogroup wifi_ble_scanner_wifi
+ * @{
+ */
 
 /**
  * @brief Initialize Wi-Fi event handling for the application.
@@ -55,6 +71,8 @@ int wifi_ble_scanner_wifi_request_autoconnect(struct net_if* wifi_iface);
  * negative error code.
  */
 int wifi_ble_scanner_wifi_start_autoconnect(struct net_if* wifi_iface);
+
+/** @} */
 
 #ifdef __cplusplus
 }

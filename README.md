@@ -9,6 +9,7 @@ This application currently provides:
 - a bootable Zephyr app target under `apps/wifi_ble_scanner`
 - sysbuild support that builds MCUboot together with the application
 - Wi-Fi support with Zephyr Wi-Fi shell commands over UART
+- onboard WS2812 RGB LED control through app shell commands
 - Wi-Fi credential storage through the `wifi_credentials` library
 - app-local settings storage for boot auto-connect behavior
 - MCUmgr SMP over UDP for remote management and image upload
@@ -17,25 +18,6 @@ This application currently provides:
 - a verified build for `esp32c6_devkitc/esp32c6/hpcore`
 
 It does not yet implement BLE scanning.
-
-## Files
-
-- `CMakeLists.txt`: Zephyr application entry point
-- `prj.conf`: application configuration
-- `sysbuild.conf`: sysbuild configuration that enables MCUboot
-- `sysbuild/mcuboot.conf`: MCUboot-specific sysbuild fragment
-- `src/CMakeLists.txt`: module-oriented build structure
-- `src/main/main.c`: startup orchestration
-- `src/settings/settings.h`: application settings interface
-- `src/settings/settings.c`: application-owned settings implementation
-- `src/settings/CMakeLists.txt`: settings module build registration
-- `src/shell/shell.h`: application shell interface
-- `src/shell/shell.c`: application shell commands
-- `src/shell/CMakeLists.txt`: shell module build registration
-- `src/wifi/wifi.h`: application Wi-Fi interface
-- `src/wifi/wifi.c`: Wi-Fi event handling and stored credential helpers
-- `src/wifi/CMakeLists.txt`: Wi-Fi module build registration
-- `LICENSE`: local MIT license for this app subtree
 
 ## Verified Board Target
 
@@ -186,6 +168,8 @@ Build and flash the app, then open the monitor from the build directory.
 Useful shell commands:
 
 - `app name`
+- `app led rgb 255 0 0`
+- `app led off`
 - `app reboot`
 - `wifi scan`
 - `wifi status`
